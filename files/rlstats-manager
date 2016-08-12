@@ -1,0 +1,31 @@
+#!/bin/bash
+
+MODO="$1"
+RODANDO=`ps uax | grep rlstatsd | grep python | awk -F" " '{print $2}'`
+case $MODO in
+	start)
+		echo -n "Starting rlstatsd... "
+		if [ "$RODANDO" == "" ]
+		then
+			/opt/bin/rlstatsd && echo "done!"
+		else
+			echo "Error: already running!"
+		fi
+		;;
+	stop)
+		echo -n "Stopping rlstatsd... "
+		if [ "$RODANDO" == "" ]
+		then
+			echo "Warning: not running!"
+		else
+			kill $RODANDO && echo "done!"
+		fi
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo 'Usage: rlstatsd {start|stop|restart}'
+		;;
+esac

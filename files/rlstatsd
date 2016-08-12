@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+import subprocess
+import socket
+import daemon
+
+#Determines IP Address
+HOSTNAME = '' # Symbolic name meaning all available interfaces 
+PORT = 10
+BUFSIZ = 1024
+VERSION = 3
+
+#This function takes Bash commands and returns them
+def runBash(cmd):
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    out = p.stdout.read().strip()
+    return out  #This is the stdout from the shell command
+
+ADDR = (HOSTNAME, PORT)
+
+commands = dict()
+commands['who'] = lambda : runBash('who')
+commands['uptime'] = lambda : runBash('uptime')
+commands['nfs'] = lambda : runBash('mount | grep nfs: | wc -l')
+commands['date'] = lambda : runBash('date')
+commands['version'] = lambda : str(VERSION)
+commands['pacotes'] = lambda : runBash("/usr/bin/aptitude search '?installed ?not(?automatic)' -F \"%p\" --disable-columns")
+commands['pacotes-version'] = lambda : runBash("/usr/bin/aptitude search '?installed ?not(?automatic)' -F \"%p;%V\" --disable-columns")
+
+
+#Function to control option parsing in Python
+def controller():
+	serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	while True:
+		try:
+			serversock.bind(ADDR)
+			break
+		except:
+			print "Error: failed to bind to port %s, trying again in 10 seconds." % PORT
+			import time
+			time.sleep(10)
+	serversock.listen(2)
+	while True:
+		clientsock, addr = serversock.accept()
+		data = clientsock.recv(BUFSIZ)
+		if data in commands:
+			clientsock.send(commands[data]())
+		else:
+			clientsock.send("Unknown command: '" + data + "'")
+		clientsock.close()
+		
+with daemon.DaemonContext():
+	controller()

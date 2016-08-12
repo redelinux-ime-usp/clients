@@ -1,0 +1,322 @@
+# Basic packages.
+curl wget apt-utils
+
+# NTP client.
+ntp
+
+# CUPS client
+cups-client
+
+# nscd e libnss-ldap substituidos pelo sssd
+sssd libsasl2-modules-gssapi-mit
+
+# libpam-krb5 substituido pelo sssd
+krb5-user
+
+# NFS client
+nfs-common librpcsecgss3 keyutils
+
+# @IMPORTANT: affected by minimum-uid of users.conf from lightdm
+autofs
+
+# Lightdm
+lightdm lightdm-gtk-greeter
+
+# Button "change user" & "lock screen" of lightdm session.
+light-locker
+
+# Unburden-home-dir
+unburden-home-dir
+
+# SSH
+openssh-server
+
+# Graphical Printer Interface that works with kerberos!
+system-config-printer
+
+# Plugin legal do kerberos para desktop
+krb5-auth-dialog
+
+# Xorg
+xorg xorg-docs-core xorg-sgml-doctools xserver-xorg xserver-xorg-input-all xserver-xorg-video-all
+
+# Mate Desktop
+mate-desktop mate-applets mate-desktop-environment-core mate-panel mate-notification-daemon mate-media mate-icon-theme mate-desktop-environment-extra mate-desktop-environment-extras
+
+# Basic
+build-essential iputils-ping iptables
+
+# Assembly
+libmaven-assembly-plugin-java
+
+# VIM
+vim vim-doc vim-gtk vim-common vim-nox vim-runtime vim-tiny vim-addon-manager vim-tlib vim-puppet
+
+# Emacs
+emacs emacs-goodies-el emacs24 emacsen-common emacs24-bin-common emacs24-common
+
+# Cmake
+cmake cmake-curses-gui cmake-data cmake-qt-gui
+
+# Haskell
+haskell-platform
+
+# Clang Compiler
+clang
+
+# Julia
+julia julia-dbg julia-doc julia-factcheck
+
+# Scala
+scala
+
+# Assembly
+nasm yasm
+
+# Bazaar
+bzr
+
+# Banner
+sysvbanner
+
+# Mercúrio
+mercurial
+
+# Flex + Bison
+flex flex-doc bison bison-doc bisonc++-doc bisonc++-doc
+
+# Debug C++
+libboost-all-dev libboost-doc
+
+# GTK
+libgtk-3-dev libgtk-3-0 libgtk-3-doc libgtk2.0-dev libgtk2.0-doc
+
+# Codeblocks for jessie (depends on sources.list repository).
+codeblocks
+gamin libwxgtk3.0-dev
+
+# GNU dbm database
+libgdbm3 libgdbm-dev
+
+# Golang
+golang-go golang golang-doc
+
+# Racket
+racket racket-common racket-doc
+
+# Eclipse
+eclipse eclipse-anyedit eclipse-cdt eclipse-cdt-autotools eclipse-cdt-jni eclipse-cdt-launch-remote eclipse-cdt-perf eclipse-cdt-pkg-config eclipse-cdt-profiling-framework eclipse-cdt-profiling-framework eclipse-cdt-qt eclipse-cdt-valgrind eclipse-changelog eclipse-eclox eclipse-egit eclipse-egit-mylyn eclipse-emf eclipse-emf-examples eclipse-emf-sdk eclipse-gef eclipse-gef-doc eclipse-jdt eclipse-mercurialeclipse eclipse-mylyn eclipse-mylyn-builds-hudson eclipse-mylyn-context-cdt eclipse-mylyn-context-jdt eclipse-mylyn-context-pde eclipse-mylyn-tasks-bugzilla eclipse-mylyn-tasks-github eclipse-mylyn-tasks-trac eclipse-mylyn-versions-cvs eclipse-mylyn-wikitext eclipse-pde eclipse-platform eclipse-platform-data eclipse-ptp-rdt eclipse-rcp eclipse-remote-services-api eclipse-rpm-editor eclipse-rse eclipse-rse-sdk eclipse-subclipse eclipse-subclipse-graph eclipse-subclipse-mylyn eclipse-wtp eclipse-wtp-servertools eclipse-wtp-webtools eclipse-wtp-ws eclipse-wtp-xmltools eclipse-wtp-xsl eclipse-xsd eclipse-xsd-sdk
+
+# Geany
+geany geany-common geany-plugins geany-plugin-addons
+
+# GIT & SVN
+gitg git git-svn git-man subversion-tools subversion
+
+# PD
+pd-extended puredata-gui pd-aubio pd-cyclone pd-purepd
+
+# Logic Circuits
+logisim glogic tkgate
+
+# Octave
+octave qtoctave liboctave2 octave-doc octave-statistics cantor-backend-octave liboctave-dev libsbml-octave
+libsbml5-octave octave-audio octave-bim octave-biosig octave-communications octave-communications-common octave-control
+octave-data-smoothing octave-dataframe octave-dbg octave-econometrics octave-epstk octave-financial octave-fpl octave-ga octave-gdf
+octave-general octave-geometry octave-gmt octave-gsl octave-image octave-lhapdf octave-linear-algebra octave-ltfat octave-ltfat-common
+octave-miscellaneous octave-missing-functions octave-mpi octave-msh octave-nan octave-nlopt octave-nurbs octave-ocs octave-octcdf octave-odepkg
+octave-openmpi-ext octave-optim octave-optiminterp octave-parallel octave-pfstools octave-pkg-dev octave-plplot octave-psychtoolbox-3
+octave-quaternion octave-secs1d octave-secs2d octave-signal octave-sockets octave-specfun octave-splines octave-strings octave-struct octave-sundials
+octave-symbolic octave-tsa octave-vlfeat octave-vrml octave-zenity
+
+# Graphs
+geogebra gnuplot gnuplot-doc gnuplot-mode gnuplot5 gnuplot5-doc feedgnuplot
+
+# Latex
+texlive-full texlive-lang-all texlive-games texlive-humanities texlive-math-extra texlive-music texlive-pictures texlive-publishers texlive-science texlive-xetex
+texstudio texmaker texlive-latex3 texlive-latex-extra latexmk latexdiff latex-cjk-all abntex texlive-bibtex-extra
+
+# Image editor
+imagemagick libnotify-bin kolourpaint4
+
+# Databases
+dia
+pgadmin3 gnupg libecpg6 libecpg-dev libgpg-error0 libmpg123-0
+
+# Prolog
+swi-prolog gprolog gprolog-doc
+
+# PostgreSQL Only
+postgresql-client
+libpqxx-dev libpqxx-doc libpqxx3-dev libghc-postgresql-libpq-dev
+
+# SML
+smlnj smlnj-doc libsmlnj-smlnj
+
+# R
+r-base-core r-cran-abind r-cran-acepack r-cran-amelia r-cran-amore r-cran-ape r-cran-base64enc r-cran-batchjobs r-cran-bayesm r-cran-bbmisc
+r-cran-beeswarm r-cran-bitops r-cran-boolnet r-cran-brew r-cran-cairodevice r-cran-car r-cran-catools r-cran-checkmate r-cran-chron r-cran-coda
+r-cran-colorspace r-cran-combinat r-cran-cubature r-cran-date r-cran-dbi r-cran-deal r-cran-deldir r-cran-deoptimr r-cran-diagnosismed r-cran-dichromat
+r-cran-digest r-cran-domc r-cran-doparallel r-cran-dosefinding r-cran-dosnow r-cran-downloader r-cran-e1071 r-cran-eco r-cran-ecodist r-cran-effects
+r-cran-energy r-cran-epi r-cran-epibasix r-cran-epicalc r-cran-epir r-cran-epitools r-cran-erm r-cran-evaluate r-cran-evd r-cran-expm r-cran-fail
+r-cran-fasianoptions r-cran-fassets r-cran-fastcluster r-cran-fbasics r-cran-fbonds r-cran-fcopulae r-cran-fexoticoptions r-cran-fextremes r-cran-fgarch
+r-cran-fimport r-cran-fmultivar r-cran-foptions r-cran-foreach r-cran-formula r-cran-fportfolio r-cran-fregression r-cran-ftrading r-cran-funitroots
+r-cran-g.data r-cran-gam r-cran-gbm r-cran-gdata r-cran-genabel r-cran-genabel.data r-cran-genetics r-cran-getopt r-cran-ggplot2 r-cran-gmaps r-cran-gmodels
+r-cran-gplots r-cran-gregmisc r-cran-gsl r-cran-gss r-cran-gtable r-cran-gtools r-cran-haplo.stats r-cran-hdf5 r-cran-hmisc r-cran-hwriter r-cran-inline r-cran-int64 r-cran-iterators r-cran-its r-cran-labeling r-cran-latticeextra r-cran-learnbayes r-cran-lhs r-cran-lme4 r-cran-lmtest r-cran-lpsolve r-cran-maldiquant r-cran-maldiquantforeign r-cran-mapdata r-cran-mapproj r-cran-maps r-cran-maptools r-cran-matchit r-cran-matrixstats r-cran-maxlik r-cran-mcmcpack r-cran-medadherence r-cran-memoise r-cran-mfilter r-cran-minqa r-cran-misc3d r-cran-misctools r-cran-mixtools r-cran-mnormt r-cran-mnp r-cran-msm r-cran-multcomp r-cran-multicore r-cran-munsell r-cran-mvnormtest r-cran-mvtnorm r-cran-ncdf4 r-cran-nloptr r-cran-numderiv r-cran-nws r-cran-optparse r-cran-permute r-cran-pkgkitten r-cran-plotrix r-cran-plyr r-cran-polspline r-cran-polyclip r-cran-polycub r-cran-proto r-cran-pscl r-cran-psy r-cran-pvclust r-cran-pwt r-cran-pwt8 r-cran-qtl r-cran-quadprog r-cran-qvalue r-cran-r.methodss3 r-cran-randomfields r-cran-randomforest r-cran-raschsampler r-cran-rcmdr r-cran-rcmdrmisc r-cran-rcolorbrewer r-cran-rcompgen r-cran-rcpp r-cran-rcpparmadillo r-cran-rcppeigen r-cran-rcurl r-cran-readbrukerflexdata r-cran-readmzxmldata r-cran-relimp r-cran-reshape r-cran-reshape2 r-cran-rgl r-cran-rglpk r-cran-rgtk2 r-cran-rjags r-cran-rjava r-cran-rjson r-cran-rmpi r-cran-rms r-cran-rmysql r-cran-rnetcdf r-cran-rniftilib r-cran-robustbase r-cran-rocr r-cran-rodbc r-cran-rquantlib r-cran-rsclient r-cran-rserve r-cran-rsolnp r-cran-rsprng r-cran-rsqlite r-cran-rsymphony r-cran-runit r-cran-sandwich r-cran-scales r-cran-scatterplot3d r-cran-segmented r-cran-sendmailr r-cran-slam r-cran-sm r-cran-sn r-cran-snow r-cran-sp r-cran-sparsem r-cran-spatstat r-cran-spc r-cran-stabledist r-cran-statmod r-cran-stringr r-cran-strucchange r-cran-surveillance r-cran-tcltk2 r-cran-teachingdemos r-cran-tensor r-cran-testthat r-cran-tgp r-cran-th.data r-cran-timedate r-cran-timeseries r-cran-tkrplot r-cran-truncnorm r-cran-tseries r-cran-urca r-cran-vcd r-cran-vegan r-cran-vgam r-cran-vioplot r-cran-vr r-cran-wdi r-cran-xml r-cran-xtable r-cran-xts r-cran-zelig r-cran-zoo
+
+# Video + image editor
+gimp libgimp2.0 vlc
+
+# Browsers
+chromium iceweasel elinks lynx evolution
+
+# QT
+qt-sdk qt4-dev-tools
+
+# Utilities
+comix libreoffice tmux scite htop unzip unrar unzip valgrind gdb bash-completion man nano less most finger aptitude ntfs-3g strace sshfs qmlscene xsel libcurl4-openssl-dev
+
+# PDF
+vprerex prerex atril
+
+# Lua
+love love-doc liblua50 liblua5.2-dev lua-bitop-dev lua50 lua5.1 lua5.2 lua50-doc liblua5.1-0-dev liblua5.1-bitop-dev liblua5.1-dev
+
+# Python
+python-qt4 python3-pyqt4 python-django python3-django python3-chardet python-libxml2 python-pip python3-pip python-pycurl python3-speechd python-pyglet
+python3-urllib3 python3-wheel python3.4 python-defusedxml libpython3.4-dev python-apt python-cups python-daemon python-gi python-gobject-2
+python-matplotlib python-minimal python-ndg-httpsclient python-notify python-numpy python3-virtualenv python3-setuptools python3-matplotlib
+python-virtualenv python-setuptools python-gnome2 python3-crypto python-slowaes python-wxglade python-matplotlib-doc python-wxtools python-gnuplot
+python-dnspython python3-dnspython python-svn python3-postgresql python-opengl python-pygame python-opengl libqt4-opengl libqt5opengl5
+python-psycopg2 python-psycopg2-doc python3-psycopg2 python3.4-psycopg2 python-gtksourceview2
+idle idle-python3.4 idle3 python-gtksourceview2 python-relational python-scrapy python-scrapy-doc
+
+# Perl
+cpanminus
+
+# Java 1.7
+maven2 ant openjdk-7-jdk default-jdk gcj-jdk icedtea-7-plugin icedtea-plugin
+
+# Java 1.8
+openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless
+
+# Maven
+maven maven2
+
+# SDL
+libsdl2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev libsdl-console-dev libsdl2-ttf-dev libsdl2-gfx-dev libsdl-sound1.2-dev libsdl2-net-dev libsdl-ttf2.0-dev
+
+# Kernel
+linux-headers-amd64
+
+# Ruby
+ruby ruby-opengl ruby-qt4 ruby-gnuplot
+
+# OpenGL
+manpages-opengl opengl-4-html-doc opengl-4-man-doc
+
+# Emulators
+mednafen
+
+# Remote Serial terminal
+minicom lrzsz
+
+# Blender
+blender blender-dbg
+
+# Squeak Smalltalk
+gnu-smalltalk gnu-smalltalk-browser
+squeak-vm
+
+# Mono
+monodevelop mono-complete
+
+# GLUT
+freeglut3-dev
+
+# Allegro
+liballegro5-dev allegro5-doc liballegro-ttf5-dev liballegro-audio5-dev liballegro-acodec5-dev liballegro-dialog5-dev liballegro-image5-dev liballegro-physfs5-dev
+
+# Gedit
+gedit gedit-latex-plugin gedit-plugins gedit-r-plugin
+
+# Pluma
+pluma
+
+# Mutt configured
+mutt
+
+# Games for Desktop
+wesnoth brutalchess hedgewars
+
+# DVD/CD burner
+xfburn
+
+# Greenfoot
+libopenjfx-java libopenjfx-jni
+
+# GLPK
+libglpk-dev glpk-utils glpk-doc libglpk-java
+
+# Devil
+libdevil-dev
+
+# Quotas dos usuários.
+quota
+
+# OpenMP
+libgomp1
+
+# MPI
+libopenmpi-dev openmpi-bin libhdf5-openmpi-dev hwloc-nox libmpich-dev libmpich12 libmpl-dev libmpl1 libopa-dev libopa1 mpich mpich-doc
+
+# SqlLite
+sqlite3 libsqlite3-dev
+
+# StarPU
+libstarpu-dev starpu-tools starpu-top starpu-examples libhwloc-dev
+
+# Rwho
+rwho rwhod
+
+# Relational
+relational relational-cli
+
+# Cert utils for browsers
+libnss3-tools
+
+# Crypto
+cryptsetup cryptsetup-bin libcryptsetup-dev libcryptsetup4
+
+# PDF editor
+pdftk
+
+# RDC
+x2goclient
+
+# Calibre
+calibre
+
+# Encfs
+encfs
+
+# LM Sensors
+lm-sensors
+
+# SMART
+smartmontools
+
+# Kill ghosts users (depends on Lightdm)
+xprintidle
+
+# Puppet
+puppet
+
+# Yes, both flashes are necessary!
+pepperflashplugin-nonfree flashplugin-nonfree
+
+# Optimizations for clients.
+irqbalance upower cpufrequtils
+
+# Sound System @TOCHECK
+alsamixergui volumeicon-alsa mate-media-gstreamer pavucontrol

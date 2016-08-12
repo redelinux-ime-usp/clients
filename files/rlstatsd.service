@@ -1,0 +1,10 @@
+[Unit]
+Description=Rwho daemon
+
+[Service]
+Type=forking
+ExecStart=/opt/bin/rlstats-manager start
+ExecStop=/opt/bin/rlstats-manager stop
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Disable hibernate (logind)]
+Identity=unix-user:*
+Action=org.freedesktop.login1.power-off
+ResultActive=no
+
+[Disable hibernate for all sessions (logind)]
+Identity=unix-user:*
+Action=org.freedesktop.login1.power-off-multiple-sessions
+ResultActive=no

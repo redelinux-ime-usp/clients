@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/volumeicon
+Hidden=false
+X-MATE-Autostart-enabled=true
+Name[pt_BR]=Volume
+Name=Sound Volume Icon
+Comment[pt_BR]= Ícone de Volume para o Desktop
+Comment= Sound Volume Icon of Desktop
