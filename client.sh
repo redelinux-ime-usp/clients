@@ -29,7 +29,7 @@ chmod -R 600 $SECRETS
 apt-get install -y --force-yes apt-transport-https debian-keyring debian-archive-keyring
 
 # Sources.
-cat <<EOF > /etc/apt/sources.list
+cat <<\EOF > /etc/apt/sources.list
 # Default
 deb http://sft.if.usp.br/debian/ jessie main contrib non-free
 deb-src http://sft.if.usp.br/debian/ jessie main contrib non-free
@@ -48,7 +48,7 @@ deb-src http://sft.if.usp.br/debian/ jessie-backports main
 EOF
 
 # Codeblocks Repository.
-cat <<EOF > /etc/apt/sources.list.d/codeblocks.list
+cat <<\EOF > /etc/apt/sources.list.d/codeblocks.list
 # Codeblocks
 deb https://apt.jenslody.de/stable jessie main
 deb-src https://apt.jenslody.de/stable jessie main
@@ -60,7 +60,7 @@ apt-get update && apt-get install -y --force-yes jens-lody-debian-keyring
 apt-key adv --keyserver keyserver.ubuntu.com --recv-key 9f0fe587374bbe81
 apt-key adv --keyserver keyserver.ubuntu.com --recv-key D63D3D09C39F5EEB
 
-cat <<EOF > /etc/apt/sources.list.d/pd-extended.list
+cat <<\EOF > /etc/apt/sources.list.d/pd-extended.list
 # Pd-extended repository.
 deb http://apt.puredata.info/releases jessie main
 deb-src http://apt.puredata.info/releases jessie main
@@ -68,7 +68,7 @@ EOF
 
 # R CRAN repository.
 apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480
-cat <<EOF > /etc/apt/sources.list.d/r_cran_mirrors.list
+cat <<\EOF > /etc/apt/sources.list.d/r_cran_mirrors.list
 # R CRAN Mirrors.
 deb http://vps.fmvz.usp.br/CRAN/bin/linux/debian jessie-cran3/
 EOF
@@ -84,7 +84,7 @@ DEBIAN_PRIORITY=critical
 export DEBIAN_PRIORITY
 
 # DNS client.
-cat <<EOF > /etc/resolv.conf
+cat <<\EOF > /etc/resolv.conf
 domain linux.ime.usp.br
 search linux.ime.usp.br
 nameserver 192.168.240.213
@@ -93,18 +93,18 @@ EOF
 chmod 644 /etc/resolv.conf
 
 # Locales.
-cat <<EOF > /etc/default/locale
+cat <<\EOF > /etc/default/locale
 LANG="pt_BR.UTF-8"
 LANGUAGE="pt_BR.UTF-8"
 EOF
-cat <<EOF > /etc/locale.gen
+cat <<\EOF > /etc/locale.gen
 en_US.UTF-8 UTF-8
 pt_BR.UTF-8 UTF-8
 EOF
 locale-gen > /dev/null
 
 wait $APT
-apt-get install -y wget & APT=$!
+apt-get install -y wget
 
 # Download Sublime
 wget -q -P $DIR/ https://download.sublimetext.com/sublime-text_build-3103_amd64.deb || echo "" &
@@ -117,11 +117,11 @@ wget -q -P $DIR/ https://download1.rstudio.org/rstudio-0.99.903-amd64.deb &
 # Greenfoot
 wget -q -P $DIR/ http://www.greenfoot.org/download/files/Greenfoot-linux-304.deb &
 
-wait $APT && apt-get install -y $(grep ^[^#] $FILES/packages | tr "\n" ' ')
+apt-get install -y $(grep ^[^#] $FILES/packages | tr "\n" ' ')
 
 ########################################################################
 # NTP client.
-cat <<EOF > /etc/ntp.conf
+cat <<\EOF > /etc/ntp.conf
 # ARQUIVO MODIFICADO PELO PUPPET!
 # NÃO EDITAR!!!
 
@@ -141,7 +141,7 @@ trustedkey 19
 EOF
 chmod 640 /etc/ntp.conf
 
-cat <<EOF > /etc/ntp.keys
+cat <<\EOF > /etc/ntp.keys
 # ntpkey_MD5key_dota.3665265069
 # Tue Feb 23 22:11:09 2016
 
@@ -174,7 +174,7 @@ systemctl restart ntp.service &
 ########################################################################
 # CUPS client
 mkdir -m 755 -p /etc/cups
-cat <<EOF > /etc/cups/client.conf
+cat <<\EOF > /etc/cups/client.conf
 ServerName cups.linux.ime.usp.br:631
 Encryption IfRequested
 EOF
@@ -219,7 +219,7 @@ update-ca-certificates
 
 # LDAP client
 # nscd e libnss-ldap substituidos pelo sssd
-cat <<EOF > /etc/sssd/sssd.conf
+cat <<\EOF > /etc/sssd/sssd.conf
 [sssd]
 config_file_version = 2
 services = nss, pam
@@ -260,7 +260,7 @@ systemctl restart sssd.service
 
 # Kerberos client
 # libpam-krb5 substituido pelo sssd
-cat <<EOF > /etc/krb5.conf
+cat <<\EOF > /etc/krb5.conf
 [libdefaults]
     default_realm = LINUX.IME.USP.BR
     forwardable = true
@@ -278,7 +278,7 @@ cat <<EOF > /etc/krb5.conf
     linux.ime.usp.br = LINUX.IME.USP.BR
 EOF
 
-cat <<EOF > /root/.k5login
+cat <<\EOF > /root/.k5login
 denisfa/admin@LINUX.IME.USP.BR
 carybe/admin@LINUX.IME.USP.BR
 duilioelias/admin@LINUX.IME.USP.BR
@@ -295,14 +295,13 @@ for princ in nfs ipp host
 do
         kadmin -p megazord/admin -k -t $SECRETS/megazord.keytab -q "add_principal -policy host -randkey $princ/$(hostname -f)"
 done
-kadmin -p megazord/admin -k -t $SECRETS/megazord.keytab -q "ktadd -glob */$(hostname -f)"
+kadmin -p megazord/admin -k -t $SECRETS/megazord.keytab -q "ktadd -glob */$(hostname -f)" &
 
 # SSSD part 2
-wait $APT
 aptitude purge -y nscd libnss-ldap libpam-krb5 libpam-ldap && aptitude reinstall libpam-sss & APT=$!
 
 # NFS client
-cat <<EOF > /etc/default/nfs-common
+cat <<\EOF > /etc/default/nfs-common
 # If you do not set values for the NEED_ options, they will be attempted
 # autodetected; this should be sufficient for most people. Valid alternatives
 # for the NEED_ options are "yes" and "no".
@@ -324,7 +323,7 @@ NEED_IDMAPD=yes
 NEED_GSSD=yes
 EOF
 
-cat <<EOF > /etc/idmapd.conf
+cat <<\EOF > /etc/idmapd.conf
 [General]
 Verbosity = 0
 Pipefs-Directory = /run/rpc_pipefs
@@ -406,7 +405,7 @@ echo "+auto.master" >> /etc/auto.master
 systemctl restart autofs.service &
 
 # Lightdm
-cat <<EOF > /etc/lightdm/lightdm-gtk-greeter.conf
+cat <<\EOF > /etc/lightdm/lightdm-gtk-greeter.conf
 #
 # background = Background file to use, either an image path or a color (e.g. #772953)
 # theme-name = GTK+ theme to use
@@ -441,7 +440,7 @@ show-clock=true
 #screensaver-timeout=
 EOF
 
-cat <<EOF > /etc/lightdm/lightdm.conf
+cat <<\EOF > /etc/lightdm/lightdm.conf
 #
 # General configuration
 #
@@ -594,7 +593,7 @@ enabled=false
 #depth=8
 EOF
 
-cat <<EOF > /etc/lightdm/users.conf
+cat <<\EOF > /etc/lightdm/users.conf
 #
 # User accounts configuration
 #
@@ -947,7 +946,7 @@ cp $FILES/login.png /opt/files/
 
 # Protection from forkbomb ":(){ :|:& };:"
 # Limit number of processes (nproc) of all users.
-cat <<EOF > /etc/security/limits.conf
+cat <<\EOF > /etc/security/limits.conf
 *    soft     nproc     1500
 *    hard     nproc     1600
 EOF
@@ -1005,7 +1004,7 @@ fi
 
 ######## Users packages
 
-cat <<EOF > /etc/Muttrc
+cat <<\EOF > /etc/Muttrc
 #
 # System configuration file for Mutt
 #
@@ -1166,8 +1165,6 @@ set header_cache=~/.hcache
 set net_inc=5
 EOF
 
-# Sublime 3 & Netbeans install
-wait $APT && apt-get install -y libnetbeans-cvsclient-java
 #dpkg -i $DIR/sublime-text_build-3103_amd64.deb || echo ""
 # Atom
 #dpkg -i $FILES/atom-amd64.deb
@@ -1177,7 +1174,6 @@ wait $APT && apt-get install -y libnetbeans-cvsclient-java
 #dpkg -i $DIR/rstudio-0.99.903-amd64.deb
 #dpkg -i $DIR/Greenfoot-linux-304.deb
 
-update-java-alternatives -s java-1.7.0-openjdk-amd64 &
 
 chmod -R 644 $DIR/squeak
 cp $DIR/squeak/* /usr/share/squeak/
@@ -1188,7 +1184,9 @@ update-grub2 &
 
 systemctl restart ssh.service &
 
-wait $Netbeans
+# Sublime 3 & Netbeans install
+wait $Netbeans && apt-get install -y libnetbeans-cvsclient-java
+update-java-alternatives -s java-1.7.0-openjdk-amd64
 dpkg -i $DIR/*.deb $FILES/*.deb || echo "" & APT=$!
 
 # Kill ghosts users (depends on Lightdm)
@@ -1265,7 +1263,7 @@ EOF
 # Firefox HTML5 support.
 # Yes, both flashes are necessary!
 mkdir -p /etc/adobe
-cat <<EOF > /etc/adobe/mms.cfg
+cat <<\EOF > /etc/adobe/mms.cfg
 # Adobe player settings
 AVHardwareDisable = 0
 FullScreenDisable = 0
@@ -1292,7 +1290,7 @@ cp $FILES/iceweasel.js /etc/firefox-esr/pref/
 mkdir -p /etc/chromium/policies/{managed,recommended}
 chmod -R 755 /etc/chromium
 
-cat <<EOF > /etc/chromium/policies/managed/kerberos.json
+cat <<\EOF > /etc/chromium/policies/managed/kerberos.json
 {
         "AuthServerWhitelist": "*",
         "AuthNegotiateDelegateWhitelist": "*",
@@ -1312,7 +1310,7 @@ systemctl enable upower &
 systemctl enable systemd-readahead-collect systemd-readahead-replay &
 
 # Responiveness of system.
-cat <<EOF > /etc/sysctl.d/99-sysctl.conf
+cat <<\EOF > /etc/sysctl.d/99-sysctl.conf
 vm.dirty_ratio = 3
 vm.dirty_background_ratio = 2
 vm.dirty_writeback_centisecs = 6000
@@ -1325,7 +1323,7 @@ kernel.keys.root_maxkeys = 65000
 EOF
 chmod 640 /etc/sysctl.d/99-sysctl.conf
 
-cat <<EOF > /etc/default/cpufrequtils
+cat <<\EOF > /etc/default/cpufrequtils
 # valid values: userspace conservative powersave ondemand performance
 # get them from 'cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors'
 GOVERNOR="ondemand"
@@ -1344,7 +1342,7 @@ rm -rf /etc/NetworkManager
 
 # Adjusting network interface.
 ETH=$(/sbin/ifconfig | awk '{ print $1 }' | grep ^eth | head -n 1)
-cat <<EOF > /etc/network/interfaces
+cat <<\EOF > /etc/network/interfaces
 # The loopback network interface
 auto lo
 iface lo inet loopback
@@ -1360,7 +1358,7 @@ apt-get autoremove -y
 ifdown $ETH && ifup $ETH
 
 # Should I?
-#rm -rf $DIR
+rm -rf $DIR
 rm -rf /root/{Desktop,.bash_history,.aptitude,.nbi}
 
 # Finished!
