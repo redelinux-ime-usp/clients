@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Parei na linha 800
 # regex to fold files: <<\\?EOF((.*\n*)(?!EOF))*
 
 set -e
@@ -109,7 +108,7 @@ apt-get install -y wget
 # Download Sublime
 wget -q -P $DIR/ https://download.sublimetext.com/sublime-text_build-3103_amd64.deb || echo "" &
 # Netbeans
-wget -q -P $DIR/ http://download.netbeans.org/netbeans/8.1/final/bundles/netbeans-8.1-linux.sh && bash $DIR/netbeans-8.1-linux.sh --silent & Netbeans=$!
+wget -q -P $DIR/ http://download.netbeans.org/netbeans/8.1/final/bundles/netbeans-8.1-linux.sh &
 # Receitanet
 wget -q -P $DIR/ http://www.receita.fazenda.gov.br/publico/programas/receitanet/receitanet-1.07.deb &
 # Rstudio
@@ -1185,7 +1184,8 @@ update-grub2 &
 systemctl restart ssh.service &
 
 # Sublime 3 & Netbeans install
-wait $Netbeans && apt-get install -y libnetbeans-cvsclient-java
+bash $DIR/netbeans-8.1-linux.sh --silent
+apt-get install -y libnetbeans-cvsclient-java
 update-java-alternatives -s java-1.7.0-openjdk-amd64
 dpkg -i $DIR/*.deb $FILES/*.deb || echo "" & APT=$!
 
