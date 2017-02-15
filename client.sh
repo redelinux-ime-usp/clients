@@ -1,4 +1,4 @@
-#!/bin/bash
+# !/bin/bash
 
 # regex to fold files: <<\\?EOF((.*\n*)(?!EOF))*
 
@@ -106,15 +106,15 @@ wait $APT
 apt-get install -y wget
 
 # Download Sublime
-wget -q -P $DIR/ https://download.sublimetext.com/sublime-text_build-3103_amd64.deb || echo "" &
+wget -q -P $DIR/ https://download.sublimetext.com/sublime-text_build-3103_amd64.deb || echo "" & DOWN=$!
 # Netbeans
-wget -q -P $DIR/ http://download.netbeans.org/netbeans/8.1/final/bundles/netbeans-8.1-linux.sh &
+wget -q -P $DIR/ http://download.netbeans.org/netbeans/8.1/final/bundles/netbeans-8.1-linux.sh & DOWN="$! $DOWN"
 # Receitanet
-wget -q -P $DIR/ http://www.receita.fazenda.gov.br/publico/programas/receitanet/receitanet-1.07.deb &
+wget -q -P $DIR/ http://www.receita.fazenda.gov.br/publico/programas/receitanet/receitanet-1.07.deb & DOWN="$! $DOWN"
 # Rstudio
-wget -q -P $DIR/ https://download1.rstudio.org/rstudio-0.99.903-amd64.deb &
+wget -q -P $DIR/ https://download1.rstudio.org/rstudio-0.99.903-amd64.deb & DOWN="$! $DOWN"
 # Greenfoot
-wget -q -P $DIR/ http://www.greenfoot.org/download/files/Greenfoot-linux-304.deb &
+wget -q -P $DIR/ http://www.greenfoot.org/download/files/old/Greenfoot-linux-304.deb & DOWN="$! $DOWN"
 
 apt-get install -y $(grep ^[^#] $FILES/packages | tr "\n" ' ')
 
@@ -282,7 +282,6 @@ denisfa/admin@LINUX.IME.USP.BR
 carybe/admin@LINUX.IME.USP.BR
 duilioelias/admin@LINUX.IME.USP.BR
 nanda/admin@LINUX.IME.USP.BR
-rasouzas/admin@LINUX.IME.USP.BR
 andreluizas/admin@LINUX.IME.USP.BR
 renatobispo/admin@LINUX.IME.USP.BR
 kazuyuki/admin@LINUX.IME.USP.BR
@@ -365,7 +364,7 @@ case "$MACHINE" in
         #echo "Sala 258A!!!"
         # Drivers.
         wait $APT
-	apt-get install -y firmware-linux-nonfree firmware-realtek & APT=$!
+		apt-get install -y firmware-linux-nonfree firmware-realtek & APT=$!
         for i in bcc prof
         do
             #Groups
@@ -1183,8 +1182,10 @@ update-grub2 &
 
 systemctl restart ssh.service &
 
-# Sublime 3 & Netbeans install
+wait $DOWN
 bash $DIR/netbeans-8.1-linux.sh --silent
+
+wait $APT
 apt-get install -y libnetbeans-cvsclient-java
 update-java-alternatives -s java-1.7.0-openjdk-amd64
 dpkg -i $DIR/*.deb $FILES/*.deb || echo "" & APT=$!
@@ -1356,6 +1357,8 @@ apt-get autoremove -y
 
 # Force the configuration of /etc/network/interfaces instead of systemd
 ifdown $ETH && ifup $ETH
+
+wait
 
 # Should I?
 rm -rf $DIR
