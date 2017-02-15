@@ -114,7 +114,10 @@ geany geany-common geany-plugins geany-plugin-addons
 gitg git git-svn git-man subversion-tools subversion
 
 # PD
-pd-extended puredata-gui pd-aubio pd-cyclone pd-purepd
+puredata-gui pd-aubio pd-cyclone pd-purepd
+
+# PD-exteded deprecated
+#pd-extended 
 
 # Logic Circuits
 logisim glogic tkgate
