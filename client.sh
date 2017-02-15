@@ -55,15 +55,14 @@ EOF
 
 apt-get update && apt-get install -y --force-yes jens-lody-debian-keyring
 
+# Pd-extended repository. !!! ABANDONED PROJECT !!!
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-key 9f0fe587374bbe81
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-key D63D3D09C39F5EEB
+#cat <<\EOF > /etc/apt/sources.list.d/pd-extended.list
 # Pd-extended repository.
-apt-key adv --keyserver keyserver.ubuntu.com --recv-key 9f0fe587374bbe81
-apt-key adv --keyserver keyserver.ubuntu.com --recv-key D63D3D09C39F5EEB
-
-cat <<\EOF > /etc/apt/sources.list.d/pd-extended.list
-# Pd-extended repository.
-deb http://apt.puredata.info/releases jessie main
-deb-src http://apt.puredata.info/releases jessie main
-EOF
+#deb http://apt.puredata.info/releases jessie main
+#deb-src http://apt.puredata.info/releases jessie main
+#EOF
 
 # R CRAN repository.
 apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480
@@ -1163,16 +1162,6 @@ set header_cache=~/.hcache
 set net_inc=5
 EOF
 
-#dpkg -i $DIR/sublime-text_build-3103_amd64.deb || echo ""
-# Atom
-#dpkg -i $FILES/atom-amd64.deb
-# Receitanet install
-#dpkg -i $DIR/receitanet-1.07.deb
-# Rstudio
-#dpkg -i $DIR/rstudio-0.99.903-amd64.deb
-#dpkg -i $DIR/Greenfoot-linux-304.deb
-
-
 chmod -R 644 $DIR/squeak
 cp $DIR/squeak/* /usr/share/squeak/
 
@@ -1183,7 +1172,7 @@ update-grub2 &
 systemctl restart ssh.service &
 
 wait $DOWN
-bash $DIR/netbeans-8.1-linux.sh --silent
+bash $DIR/netbeans-8.1-linux.sh --silent && echo "Running NetBeans script, it takes some time..." 
 
 wait $APT
 apt-get install -y libnetbeans-cvsclient-java
