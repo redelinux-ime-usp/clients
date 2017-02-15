@@ -1349,14 +1349,20 @@ ifdown $ETH && ifup $ETH
 
 wait
 
+# Finished!
+# Puppet will run, but it is unecessary after this script.
+COMPLETE_HOSTNAME=$(hostname -A)
+ssh -o StrictHostKeyChecking=no  -i $SECRETS/id_rsa puppet "puppet cert clean $COMPLETE_HOSTNAME"
+
+find /var/lib/puppet/ssl -name "$(echo -e $COMPLETE_HOSTNAME\* | tr -d ' ')" -delete
+puppet agent -t
+
+ssh -o StrictHostKeyChecking=no  -i $SECRETS/id_rsa puppet "puppet cert sign $COMPLETE_HOSTNAME"
+puppet agent -t
+
 # Should I?
 rm -rf $DIR
 rm -rf /root/{Desktop,.bash_history,.aptitude,.nbi}
-
-# Finished!
-# Puppet will run, but it is unecessary after this script.
-# @TODO: solve certificate issues in this script.
-#puppet agent -t
 
 # Finally...
 echo "Installation complete"
