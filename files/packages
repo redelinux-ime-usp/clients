@@ -198,7 +198,7 @@ idle idle-python3.4 idle3 python-gtksourceview2 python-relational python-scrapy 
 cpanminus
 
 # Java 1.7
-maven2 ant openjdk-7-jdk default-jdk gcj-jdk icedtea-7-plugin icedtea-plugin
+maven2 ant openjdk-7-jdk default-jdk gcj-jdk icedtea-7-plugin icedtea-plugin icedtea-netx
 
 # Java 1.8
 openjdk-8-jdk openjdk-8-jre openjdk-8-jre-headless

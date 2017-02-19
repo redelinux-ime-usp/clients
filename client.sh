@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 # regex to fold files: <<\\?EOF((.*\n*)(?!EOF))*
 
@@ -12,12 +12,6 @@ fi
 
 # Script dir.
 DIR="$( cd "$( dirname "$0" )" && pwd )"
-
-# Decrypt thy Secrets
-gpg -d secrets.tar.gz.gpg | tar -xz
-
-# To encrypt:
-# tar cz secrets | gpg -o secrets.tar.gz.gpg --cipher-algo AES256 --digest-algo SHA512 --s2k-mode 3 --s2k-count 65011712 --compress-algo BZIP2 --bzip2-compress-level 9 --s2k-digest-algo SHA512 --symmetric
 
 # Global variables.
 FILES=$DIR/files
@@ -70,6 +64,9 @@ cat <<\EOF > /etc/apt/sources.list.d/r_cran_mirrors.list
 # R CRAN Mirrors.
 deb http://vps.fmvz.usp.br/CRAN/bin/linux/debian jessie-cran3/
 EOF
+
+# Backports issue
+apt install -y -t jessie-backports  openjdk-8-jre-headless ca-certificates-java
 
 ########################################################################
 # Updates!
@@ -1172,7 +1169,7 @@ update-grub2 &
 systemctl restart ssh.service &
 
 wait $DOWN
-bash $DIR/netbeans-8.1-linux.sh --silent && echo "Running NetBeans script, it takes some time..." 
+echo "Running NetBeans script, it takes some time..." && bash $DIR/netbeans-8.1-linux.sh --silent
 
 wait $APT
 apt-get install -y libnetbeans-cvsclient-java
@@ -1332,7 +1329,7 @@ rm -rf /etc/NetworkManager
 
 # Adjusting network interface.
 ETH=$(/sbin/ifconfig | awk '{ print $1 }' | grep ^eth | head -n 1)
-cat <<\EOF > /etc/network/interfaces
+cat <<EOF > /etc/network/interfaces
 # The loopback network interface
 auto lo
 iface lo inet loopback
@@ -1352,13 +1349,13 @@ wait
 # Finished!
 # Puppet will run, but it is unecessary after this script.
 COMPLETE_HOSTNAME=$(hostname -A)
-ssh -o StrictHostKeyChecking=no  -i $SECRETS/id_rsa puppet "puppet cert clean $COMPLETE_HOSTNAME"
+ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert clean $COMPLETE_HOSTNAME"
 
 find /var/lib/puppet/ssl -name "$(echo -e $COMPLETE_HOSTNAME\* | tr -d ' ')" -delete
-puppet agent -t
+puppet agent -t --waitforcert 10 || echo "" & sleep 20
 
-ssh -o StrictHostKeyChecking=no  -i $SECRETS/id_rsa puppet "puppet cert sign $COMPLETE_HOSTNAME"
-puppet agent -t
+ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert sign $COMPLETE_HOSTNAME"
+wait
 
 # Should I?
 rm -rf $DIR
