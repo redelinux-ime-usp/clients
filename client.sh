@@ -1349,10 +1349,10 @@ wait
 # Finished!
 # Puppet will run, but it is unecessary after this script.
 COMPLETE_HOSTNAME=$(hostname -A)
-ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert clean $COMPLETE_HOSTNAME"
+ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert clean $COMPLETE_HOSTNAME" || echo "host doesn\'t have a certificate; creating one..."
 
 find /var/lib/puppet/ssl -name "$(echo -e $COMPLETE_HOSTNAME\* | tr -d ' ')" -delete
-puppet agent -t --waitforcert 10 || echo "" & sleep 20
+puppet agent -t --waitforcert 25 || echo "" & sleep 30
 
 ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert sign $COMPLETE_HOSTNAME"
 wait
