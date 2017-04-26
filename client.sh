@@ -276,13 +276,14 @@ cat <<\EOF > /etc/krb5.conf
 EOF
 
 cat <<\EOF > /root/.k5login
-denisfa/admin@LINUX.IME.USP.BR
-carybe/admin@LINUX.IME.USP.BR
-duilioelias/admin@LINUX.IME.USP.BR
-nanda/admin@LINUX.IME.USP.BR
-andreluizas/admin@LINUX.IME.USP.BR
-renatobispo/admin@LINUX.IME.USP.BR
+hugom/admin@LINUX.IME.USP.BR
+seijihariki/admin@LINUX.IME.USP.BR
+robotenique/admin@LINUX.IME.USP.BR
+brunobbs/admin@LINUX.IME.USP.BR
+renantiago/admin@LINUX.IME.USP.BR
+andrei/admin@LINUX.IME.USP.BR
 kazuyuki/admin@LINUX.IME.USP.BR
+denisfa/admin@LINUX.IME.USP.BR
 EOF
 
 # Kerberos Principals (create & export)
