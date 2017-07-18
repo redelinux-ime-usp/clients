@@ -18,601 +18,7 @@ FILES=$DIR/files
 SECRETS=$DIR/secrets
 chmod -R 600 $SECRETS
 
-# HTTPS repository & Keyrings for Debian repository.
-apt-get install -y --force-yes apt-transport-https debian-keyring debian-archive-keyring
 
-# Sources.
-cat <<\EOF > /etc/apt/sources.list
-# Default
-deb http://sft.if.usp.br/debian/ jessie main contrib non-free
-deb-src http://sft.if.usp.br/debian/ jessie main contrib non-free
-
-# Security
-deb http://security.debian.org/ jessie/updates main
-deb-src http://security.debian.org/ jessie/updates main
-
-# Updates
-deb http://sft.if.usp.br/debian/ jessie-updates main
-deb-src http://sft.if.usp.br/debian/ jessie-updates main
-
-# Backports
-deb http://sft.if.usp.br/debian/ jessie-backports main
-deb-src http://sft.if.usp.br/debian/ jessie-backports main
-EOF
-
-# Codeblocks Repository.
-cat <<\EOF > /etc/apt/sources.list.d/codeblocks.list
-# Codeblocks
-deb https://apt.jenslody.de/stable jessie main
-deb-src https://apt.jenslody.de/stable jessie main
-EOF
-
-apt-get update && apt-get install -y --force-yes jens-lody-debian-keyring
-
-# Pd-extended repository. !!! ABANDONED PROJECT !!!
-#apt-key adv --keyserver keyserver.ubuntu.com --recv-key 9f0fe587374bbe81
-#apt-key adv --keyserver keyserver.ubuntu.com --recv-key D63D3D09C39F5EEB
-#cat <<\EOF > /etc/apt/sources.list.d/pd-extended.list
-# Pd-extended repository.
-#deb http://apt.puredata.info/releases jessie main
-#deb-src http://apt.puredata.info/releases jessie main
-#EOF
-
-# R CRAN repository.
-apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480
-cat <<\EOF > /etc/apt/sources.list.d/r_cran_mirrors.list
-# R CRAN Mirrors.
-deb http://vps.fmvz.usp.br/CRAN/bin/linux/debian jessie-cran3/
-EOF
-
-# Backports issue
-apt install -y -t jessie-backports  openjdk-8-jre-headless ca-certificates-java
-
-########################################################################
-# Updates!
-apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && apt-get autoremove -y & APT=$!
-
-# Non-interactive installation of packages.
-DEBIAN_FRONTEND=noninteractive
-export DEBIAN_FRONTEND
-DEBIAN_PRIORITY=critical
-export DEBIAN_PRIORITY
-
-# DNS client.
-cat <<\EOF > /etc/resolv.conf
-domain linux.ime.usp.br
-search linux.ime.usp.br
-nameserver 192.168.240.213
-nameserver 192.168.240.214
-EOF
-chmod 644 /etc/resolv.conf
-
-# Locales.
-cat <<\EOF > /etc/default/locale
-LANG="pt_BR.UTF-8"
-LANGUAGE="pt_BR.UTF-8"
-EOF
-cat <<\EOF > /etc/locale.gen
-en_US.UTF-8 UTF-8
-pt_BR.UTF-8 UTF-8
-EOF
-locale-gen > /dev/null
-
-wait $APT
-apt-get install -y wget
-
-# Download Sublime
-wget -q -P $DIR/ https://download.sublimetext.com/sublime-text_build-3103_amd64.deb || echo "" & DOWN=$!
-# Netbeans
-wget -q -P $DIR/ http://download.netbeans.org/netbeans/8.1/final/bundles/netbeans-8.1-linux.sh & DOWN="$! $DOWN"
-# Receitanet
-wget -q -P $DIR/ http://www.receita.fazenda.gov.br/publico/programas/receitanet/receitanet-1.07.deb & DOWN="$! $DOWN"
-# Rstudio
-wget -q -P $DIR/ https://download1.rstudio.org/rstudio-0.99.903-amd64.deb & DOWN="$! $DOWN"
-# Greenfoot
-wget -q -P $DIR/ http://www.greenfoot.org/download/files/old/Greenfoot-linux-304.deb & DOWN="$! $DOWN"
-
-apt-get install -y $(grep ^[^#] $FILES/packages | tr "\n" ' ')
-
-########################################################################
-# NTP client.
-cat <<\EOF > /etc/ntp.conf
-# ARQUIVO MODIFICADO PELO PUPPET!
-# N√ÉO EDITAR!!!
-
-driftfile /var/lib/ntp/ntp.drift
-
-server ntp.linux.ime.usp.br key 19
-restrict ntp.linux.ime.usp.br
-
-restrict default ignore
-restrict -6 default ignore
-restrict 127.0.0.1
-restrict -6 ::1
-
-enable auth
-keys /etc/ntp.keys
-trustedkey 19
-EOF
-chmod 640 /etc/ntp.conf
-
-cat <<\EOF > /etc/ntp.keys
-# ntpkey_MD5key_dota.3665265069
-# Tue Feb 23 22:11:09 2016
-
- 1 MD5 wG2ZiqOL%3jiOQ.UbzM4  # MD5 key
- 2 MD5 -ZoHO?HY"ZBry!@F?`06  # MD5 key
- 3 MD5 qqM[|XTTdE(hl4|6K0*b  # MD5 key
- 4 MD5 PRr6lM$+reaJhFj;\dF"  # MD5 key
- 5 MD5 %[5d:Ia1/}Lp|DE21Aea  # MD5 key
- 6 MD5 BO8a^WPZp3-vGOS5]Nu`  # MD5 key
- 7 MD5 %~I/q8<&.PE_[jhuul8I  # MD5 key
- 8 MD5 MhB:3k!-lnhZ!}j;S%@M  # MD5 key
- 9 MD5 ue8!zl+)6TE,xn)iVPk!  # MD5 key
-10 MD5 s^_F'0i]M*?mbmi4/=uU  # MD5 key
-11 SHA1 7d83254702be37a6f545b7e6e4ce2421f3f1f254  # SHA1 key
-12 SHA1 7a2b34c24deb973f4eb5c9cdf2139a90ff4b72fd  # SHA1 key
-13 SHA1 6892564fbe002cc4adeb7e3cf746ca7fa77c45a4  # SHA1 key
-14 SHA1 967dfed53b38786f4344ae29d2db8acb22c4d2d8  # SHA1 key
-15 SHA1 842dd97f0293372eee8869e1e3bdc94fe9b51267  # SHA1 key
-16 SHA1 f5cfb5e2bc325d6f814d4110cf7c3f395bab7d36  # SHA1 key
-17 SHA1 3eab692748705fe5be462f84bc0cf952b30d8ca9  # SHA1 key
-18 SHA1 def49d9643a868008753fff0bacb6df7a0fcd108  # SHA1 key
-19 SHA1 2c8f389cd6424a80dec41ed7f8fa35f087deb923  # SHA1 key
-20 SHA1 541bb2fb6a293430150afef97db5fa3a8172466e  # SHA1 key
-EOF
-chmod 400 /etc/ntp.keys
-
-systemctl restart ntp.service &
-timedatectl set-ntp true
-
-########################################################################
-
-########################################################################
-# CUPS client
-mkdir -m 755 -p /etc/cups
-cat <<\EOF > /etc/cups/client.conf
-ServerName cups.linux.ime.usp.br:631
-Encryption IfRequested
-EOF
-chmod 755 /etc/cups/client.conf
-########################################################################
-
-# Install LDAP Certificate.
-mkdir -p /etc/ldap/tls
-cat <<\EOF > /etc/ldap/tls/redelinuxCA.crt
------BEGIN CERTIFICATE-----
-MIIE9DCCA9ygAwIBAgIIVcKLQhWceb0wDQYJKoZIhvcNAQELBQAwggECMTEwLwYD
-VQQDEyhSZWRlIExpbnV4IElNRS1VU1AgQ2VydGlmaWNhdGUgQXV0aG9yaXR5MRMw
-EQYDVQQLEwpSZWRlIExpbnV4MTAwLgYDVQQKDCdJbnN0aXR1dG8gZGUgTWF0ZW3D
-oXRpY2EgZSBFc3RhdMOtc3RpY2ExDzANBgNVBAcTBkJyYXppbDETMBEGA1UECAwK
-U8OjbyBQYXVsbzELMAkGA1UEBhMCQlIxFTATBgoJkiaJk/IsZAEZFgVsaW51eDET
-MBEGCgmSJomT8ixkARkWA2ltZTETMBEGCgmSJomT8ixkARkWA3VzcDESMBAGCgmS
-JomT8ixkARkWAmJyMCIYDzIwMTUwODA1MjIxNjM1WhgPMjAyNTA4MDIyMjE2Mzla
-MIIBAjExMC8GA1UEAxMoUmVkZSBMaW51eCBJTUUtVVNQIENlcnRpZmljYXRlIEF1
-dGhvcml0eTETMBEGA1UECxMKUmVkZSBMaW51eDEwMC4GA1UECgwnSW5zdGl0dXRv
-IGRlIE1hdGVtw6F0aWNhIGUgRXN0YXTDrXN0aWNhMQ8wDQYDVQQHEwZCcmF6aWwx
-EzARBgNVBAgMClPDo28gUGF1bG8xCzAJBgNVBAYTAkJSMRUwEwYKCZImiZPyLGQB
-GRYFbGludXgxEzARBgoJkiaJk/IsZAEZFgNpbWUxEzARBgoJkiaJk/IsZAEZFgN1
-c3AxEjAQBgoJkiaJk/IsZAEZFgJicjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAMhNTl4JpdTO0/X51ofpwA2PLSX4hsVvx5oCuigMlHEwzWZHQJTuclER
-H01c3Sla+FoP/gCCC5McllW3p+KShjCvNU30oZkTNVNKSf1aVvOpKMUXzMLRtZ/S
-RnM+IQOTmqwRrA2rlK9YorHImY+GgehKRKLzu5aVzB7NxYea0J2dYuJb28yX9CcC
-G7KhqwtRG9tnZE+VuRFQP5fpt/Qk0tqYwb8KBP8zNNDdaMxj83lUhqN4yztHApCB
-c4/dHaCa9gOD4Tqm96VWMpMDqUo+RnFreYFfeqLX2TsBf6aYmau9XGSzKT8SgQHF
-f6cW8qzxQyhWF84OSUpI4UF8LUGPCMECAwEAAaNmMGQwDwYDVR0TAQH/BAUwAwEB
-/zAhBgNVHREEGjAYgRZhZG1pbkBsaW51eC5pbWUudXNwLmJyMA8GA1UdDwEB/wQF
-AwMHBAAwHQYDVR0OBBYEFD+796f2H335n7yrtH3cC79XlPOeMA0GCSqGSIb3DQEB
-CwUAA4IBAQDHL75RPccm7IxHGHhRN1Zo2pHTu5HWSMtPLuPLRg2fS4+2npLDYzTs
-WWP7wDYsignb699V1gZOKSfJrrxwvbg8lUa1GnnMM7Ra1ImHv2SbfVSWkGt4lVgb
-zvCEwpBs3GFlid+K9w7wlrWzkG0yolIa8+iR6XXCJhtr0im5kwev85m+QLnWWiu2
-/2YDtuprPP+vAnhbzw2p/1ad/4C+Yl7iv1I5aldVuQ84EDo6LUcpm7O5eanzjxUL
-xDu/WxPLKS77I9lf0E7X2OjpL8PRJIc3yf+l8Om9WJSnu/SN5A2yarnKXSkuuinU
-6r/ifs+7xmsiOrMZnDmZ1Ssd5lV3vyyr
------END CERTIFICATE-----
-EOF
-cp /etc/ldap/tls/redelinuxCA.crt /usr/local/share/ca-certificates/
-update-ca-certificates
-
-# LDAP client
-# nscd e libnss-ldap substituidos pelo sssd
-cat <<\EOF > /etc/sssd/sssd.conf
-[sssd]
-config_file_version = 2
-services = nss, pam
-sbus_timeout = 30
-domains = linux.ime.usp.br
-
-[nss]
-filter_users = root
-filter_groups = root
-
-[pam]
-offline_credentials_expiration = 7
-
-[domain/linux.ime.usp.br]
-enumerate = true
-cache_credentials = true
-
-id_provider = ldap
-chpass_provider = krb5
-ldap_uri = ldaps://ldap.linux.ime.usp.br
-ldap_search_base = dc=linux,dc=ime,dc=usp,dc=br
-ldap_tls_reqcert = demand
-ldap_tls_cacert = /etc/ldap/tls/redelinuxCA.crt
-ldap_sasl_mech = GSSAPI
-
-auth_provider = krb5
-krb5_server = kdc.linux.ime.usp.br
-krb5_backup_server = kerberos.linux.ime.usp.br
-krb5_realm = LINUX.IME.USP.BR
-krb5_changepw_principal = kadmin/changepw
-krb5_ccachedir = /tmp
-krb5_ccname_template = FILE:%d/krb5cc_sss_%U_XXXXXX
-krb5_auth_timeout = 15
-krb5_kpasswd = kdc.linux.ime.usp.br
-EOF
-chmod 600 /etc/sssd/sssd.conf
-systemctl restart sssd.service
-
-# Kerberos client
-# libpam-krb5 substituido pelo sssd
-cat <<\EOF > /etc/krb5.conf
-[libdefaults]
-    default_realm = LINUX.IME.USP.BR
-    forwardable = true
-    proxiable = true
-
-[realms]
-    LINUX.IME.USP.BR = {
-        kdc = kdc.linux.ime.usp.br
-        kdc = kerberos.linux.ime.usp.br
-        admin_server = kerberos.linux.ime.usp.br
-    }
-
-[domain_realm]
-    .linux.ime.usp.br = LINUX.IME.USP.BR
-    linux.ime.usp.br = LINUX.IME.USP.BR
-EOF
-
-cat <<\EOF > /root/.k5login
-hugom/admin@LINUX.IME.USP.BR
-seijihariki/admin@LINUX.IME.USP.BR
-robotenique/admin@LINUX.IME.USP.BR
-brunobbs/admin@LINUX.IME.USP.BR
-renantiago/admin@LINUX.IME.USP.BR
-andrei/admin@LINUX.IME.USP.BR
-kazuyuki/admin@LINUX.IME.USP.BR
-denisfa/admin@LINUX.IME.USP.BR
-EOF
-
-# Kerberos Principals (create & export)
-rm -rf /etc/krb5.keytab
-for princ in nfs ipp host
-do
-        kadmin -p megazord/admin -k -t $SECRETS/megazord.keytab -q "add_principal -policy host -randkey $princ/$(hostname -f)"
-done
-kadmin -p megazord/admin -k -t $SECRETS/megazord.keytab -q "ktadd -glob */$(hostname -f)" &
-
-# SSSD part 2
-aptitude purge -y nscd libnss-ldap libpam-krb5 libpam-ldap && aptitude reinstall libpam-sss & APT=$!
-
-# NFS client
-cat <<\EOF > /etc/default/nfs-common
-# If you do not set values for the NEED_ options, they will be attempted
-# autodetected; this should be sufficient for most people. Valid alternatives
-# for the NEED_ options are "yes" and "no".
-
-# Do you want to start the statd daemon? It is not needed for NFSv4.
-NEED_STATD=
-
-# Options for rpc.statd.
-#   Should rpc.statd listen on a specific port? This is especially useful
-#   when you have a port-based firewall. To use a fixed port, set this
-#   this variable to a statd argument like: "--port 4000 --outgoing-port 4001".
-#   For more information, see rpc.statd(8) or http://wiki.debian.org/SecuringNFS
-STATDOPTS=
-
-# Do you want to start the idmapd daemon? It is only needed for NFSv4.
-NEED_IDMAPD=yes
-
-# Do you want to start the gssd daemon? It is required for Kerberos mounts.
-NEED_GSSD=yes
-EOF
-
-cat <<\EOF > /etc/idmapd.conf
-[General]
-Verbosity = 0
-Pipefs-Directory = /run/rpc_pipefs
-Domain = linux.ime.usp.br
-Local-Realms = LINUX.IME.USP.BR
-
-[Mapping]
-Nobody-User = nobody
-Nobody-Group = nogroup
-
-[Translation]
-Method = nsswitch
-EOF
-systemctl restart nfs-common.service &
-
-# Autofs Client
-# @IMPORTANT: affected by minimum-uid of users.conf from lightdm
-rm -rf /home && mkdir -p /{home,global} && mkdir -p /etc/autofs &
-rm -rf /etc/auto.{master,misc,net,smb} &
-
-# Control groups login.
-# Only "bcc" can log in 258A.
-# everybody except "exaluno" can log in 127A.
-rm -rf /etc/login.group.allowed
-
-# From which room is this machine?
-# Command not NULL means 258A
-# 0 - 258A
-# 1 - 127A
-if lspci | grep "Radeon HD 4290" > /dev/null
-then
-        MACHINE=0
-else
-        MACHINE=1
-fi
-
-# Select special configuration for each room.
-case "$MACHINE" in
-    0)
-        #echo "Sala 258A!!!"
-        # Drivers.
-        wait $APT
-		apt-get install -y firmware-linux-nonfree firmware-realtek & APT=$!
-        for i in bcc prof
-        do
-            #Groups
-            echo "$i" >> /etc/login.group.allowed
-            done
-            ;;
-    1)
-        #echo "Sala 127A!!!"
-        for i in bcc bmac bm bma be lic licn prof spec
-        do
-            #Groups
-            echo "$i" >> /etc/login.group.allowed
-        done
-            ;;
-esac
-
-# Apply login rules to PAM.
-if ! grep -Fxq "auth required pam_listfile.so onerr=fail item=group sense=allow file=/etc/login.group.allowed" /etc/pam.d/common-auth
-then
-    echo "auth required pam_listfile.so onerr=fail item=group sense=allow file=/etc/login.group.allowed" | cat - /etc/pam.d/common-auth > /tmp/PAM && mv -f /tmp/PAM /etc/pam.d/common-auth
-fi
-
-
-# NFS home mountpoints via autofs.
-for i in bcc bmac bm bma be lic licn prof spec
-do
-        mkdir -p /home/$i
-        echo "* --fstype=nfs4,rw,noatime,hard,intr,rsize=1048576,wsize=1048576,sec=krb5p nfs.linux.ime.usp.br:/home/$i/&" > /etc/autofs/auto.$i
-        echo "/home/$i /etc/autofs/auto.$i --timeout 60" >> /etc/auto.master
-done
-
-# /global mountpoint.
-echo "/global -fstype=nfs4,rw,noatime,hard,intr,rsize=1048576,wsize=1048576,sec=krb5p nfs.linux.ime.usp.br:/global" > /etc/autofs/auto.global
-echo "/- /etc/autofs/auto.global --timeout 60" >> /etc/auto.master
-echo "+auto.master" >> /etc/auto.master
-systemctl restart autofs.service &
-
-# Lightdm
-cat <<\EOF > /etc/lightdm/lightdm-gtk-greeter.conf
-#
-# background = Background file to use, either an image path or a color (e.g. #772953)
-# theme-name = GTK+ theme to use
-# icon-theme-name = Icon theme to use
-# font-name = Font to use
-# xft-antialias = Whether to antialias Xft fonts (true or false)
-# xft-dpi = Resolution for Xft in dots per inch (e.g. 96)
-# xft-hintstyle = What degree of hinting to use (none, slight, medium, or hintfull)
-# xft-rgba = Type of subpixel antialiasing (none, rgb, bgr, vrgb or vbgr)
-# show-indicators = semi-colon ";" separated list of allowed indicator modules. Built-in indicators include "~a11y", "~language", "~session", "~power". Unity indicators can be represented by short name (e.g. "sound", "power"), service file name, or absolute path
-# show-clock (true or false)
-# clock-format = strftime-format string, e.g. %H:%M
-# keyboard = command to launch on-screen keyboard
-# position = main window position: x y
-# default-user-image = Image used as default user icon, path or #icon-name
-# screensaver-timeout = Timeout (in seconds) until the screen blanks when the greeter is called as lockscreen
-#
-[greeter]
-background=/opt/files/login.png
-theme-name=Adwaita
-#icon-theme-name=
-#font-name=
-#xft-antialias=true
-#xft-dpi=
-#xft-hintstyle=hintfull
-#xft-rgba=rgb
-#show-indicators=~language;~session;~power
-show-clock=true
-#clock-format=
-#keyboard=
-#position=
-#screensaver-timeout=
-EOF
-
-cat <<\EOF > /etc/lightdm/lightdm.conf
-#
-# General configuration
-#
-# start-default-seat = True to always start one seat if none are defined in the configuration
-# greeter-user = User to run greeter as
-# minimum-display-number = Minimum display number to use for X servers
-# minimum-vt = First VT to run displays on
-# lock-memory = True to prevent memory from being paged to disk
-# user-authority-in-system-dir = True if session authority should be in the system location
-# guest-account-script = Script to be run to setup guest account
-# log-directory = Directory to log information to
-# run-directory = Directory to put running state in
-# cache-directory = Directory to cache to
-# sessions-directory = Directory to find sessions
-# remote-sessions-directory = Directory to find remote sessions
-# greeters-directory = Directory to find greeters
-#
-[LightDM]
-#start-default-seat=true
-#greeter-user=lightdm
-#minimum-display-number=0
-#minimum-vt=7
-lock-memory=true
-#user-authority-in-system-dir=false
-#guest-account-script=guest-account
-log-directory=/var/log/lightdm
-run-directory=/var/run/lightdm
-cache-directory=/var/cache/lightdm
-sessions-directory=/usr/share/lightdm/sessions:/usr/share/xsessions
-#remote-sessions-directory=/usr/share/lightdm/remote-sessions
-#greeters-directory=/usr/share/lightdm/greeters:/usr/share/xgreeters
-
-#
-# Seat defaults
-#
-# type = Seat type (xlocal, xremote)
-# xdg-seat = Seat name to set pam_systemd XDG_SEAT variable and name to pass to X server
-# xserver-command = X server command to run (can also contain arguments e.g. X -special-option)
-# xserver-layout = Layout to pass to X server
-# xserver-config = Config file to pass to X server
-# xserver-allow-tcp = True if TCP/IP connections are allowed to this X server
-# xserver-share = True if the X server is shared for both greeter and session
-# xserver-hostname = Hostname of X server (only for type=xremote)
-# xserver-display-number = Display number of X server (only for type=xremote)
-# xdmcp-manager = XDMCP manager to connect to (implies xserver-allow-tcp=true)
-# xdmcp-port = XDMCP UDP/IP port to communicate on
-# xdmcp-key = Authentication key to use for XDM-AUTHENTICATION-1 (stored in keys.conf)
-# unity-compositor-command = Unity compositor command to run (can also contain arguments e.g. unity-system-compositor -special-option)
-# unity-compositor-timeout = Number of seconds to wait for compositor to start
-# greeter-session = Session to load for greeter
-# greeter-hide-users = True to hide the user list
-# greeter-allow-guest = True if the greeter should show a guest login option
-# greeter-show-manual-login = True if the greeter should offer a manual login option
-# greeter-show-remote-login = True if the greeter should offer a remote login option
-# user-session = Session to load for users
-# allow-guest = True if guest login is allowed
-# guest-session = Session to load for guests (overrides user-session)
-# session-wrapper = Wrapper script to run session with
-# greeter-wrapper = Wrapper script to run greeter with
-# guest-wrapper = Wrapper script to run guest sessions with
-# display-setup-script = Script to run when starting a greeter session (runs as root)
-# display-stopped-script = Script to run after stopping the display server (runs as root)
-# greeter-setup-script = Script to run when starting a greeter (runs as root)
-# session-setup-script = Script to run when starting a user session (runs as root)
-# session-cleanup-script = Script to run when quitting a user session (runs as root)
-# autologin-guest = True to log in as guest by default
-# autologin-user = User to log in with by default (overrides autologin-guest)
-# autologin-user-timeout = Number of seconds to wait before loading default user
-# autologin-session = Session to load for automatic login (overrides user-session)
-# autologin-in-background = True if autologin session should not be immediately activated
-# exit-on-failure = True if the daemon should exit if this seat fails
-#
-[SeatDefaults]
-#type=xlocal
-#xdg-seat=seat0
-#xserver-command=X
-#xserver-layout=
-#xserver-config=
-#xserver-allow-tcp=false
-xserver-share=true
-#xserver-hostname=
-#xserver-display-number=
-#xdmcp-manager=
-#xdmcp-port=177
-#xdmcp-key=
-#unity-compositor-command=unity-system-compositor
-unity-compositor-timeout=60
-#greeter-session=example-gtk-gnome
-greeter-hide-users=true
-#greeter-allow-guest=false
-#greeter-show-manual-login=false
-#greeter-show-remote-login=true
-#user-session=default
-allow-guest=false
-#guest-session=
-#session-wrapper=lightdm-session
-#greeter-wrapper=
-#guest-wrapper=
-#display-setup-script=
-#display-stopped-script=
-#greeter-setup-script=
-#session-setup-script=
-#session-cleanup-script=
-#autologin-guest=false
-#autologin-user=
-#autologin-user-timeout=0
-#autologin-in-background=false
-#autologin-session=UNIMPLEMENTED
-#exit-on-failure=false
-
-#
-# Seat configuration
-#
-# Each seat must start with "Seat:".
-# Uses settings from [SeatDefaults], any of these can be overriden by setting them in this section.
-#
-#[Seat:0]
-
-#
-# XDMCP Server configuration
-#
-# enabled = True if XDMCP connections should be allowed
-# port = UDP/IP port to listen for connections on
-# key = Authentication key to use for XDM-AUTHENTICATION-1 or blank to not use authentication (stored in keys.conf)
-#
-# The authentication key is a 56 bit DES key specified in hex as 0xnnnnnnnnnnnnnn.  Alternatively
-# it can be a word and the first 7 characters are used as the key.
-#
-[XDMCPServer]
-enabled=false
-#port=177
-#key=
-
-#
-# VNC Server configuration
-#
-# enabled = True if VNC connections should be allowed
-# command = Command to run Xvnc server with
-# port = TCP/IP port to listen for connections on
-# width = Width of display to use
-# height = Height of display to use
-# depth = Color depth of display to use
-#
-[VNCServer]
-enabled=false
-#command=Xvnc
-#port=5900
-#width=1024
-#height=768
-#depth=8
-EOF
-
-cat <<\EOF > /etc/lightdm/users.conf
-#
-# User accounts configuration
-#
-# NOTE: If you have AccountsService installed on your system, then LightDM will
-# use this instead and these settings will be ignored
-#
-# minimum-uid = Minimum UID required to be shown in greeter
-# hidden-users = Users that are not shown to the user
-# hidden-shells = Shells that indicate a user cannot login
-#
-[UserList]
-minimum-uid=10000000
-hidden-users=nobody nobody4 noaccess
-hidden-shells=/bin/false /usr/sbin/nologin
-EOF
-
-chown -R lightdm:lightdm /etc/lightdm
-systemctl restart lightdm.service &
-
-# USB mounts correct
-sed -i -e '/usb0/d' -e '/usb1/d' -e '/usb2/d' -e '/usb3/d' -e '/usb4/d' /etc/fstab
-systemctl restart udisks2.service &
 
 ########################################################################
 cat <<\EOF > /etc/unburden-home-dir.list
@@ -644,6 +50,7 @@ m d .opera/cache4 opera-cache4
 m d .opera/opcache opera-opcache
 m d .opera/cacheOp opera-cacheOp
 m d .config/qupzilla/profiles/*/networkcache qupzilla-cache-%1
+
 
 # Mail- and microblogging clients, may affect offline caches
 m d .thunderbird/*/Cache thunderbird-cache-%1
@@ -850,11 +257,9 @@ chmod 644 /root/.ssh/authorized_keys
 # Bashrc & /etc/profile
 cat <<\EOF > /root/.bashrc
 ### Rede Linux Clients
-
-# Essa linha √© o que garante a mudan√ßa de PATH do usu√°rio para o root!
+# Essa linha È o que garante a mudanÁa de PATH do usu·rio para o root!
 source /etc/profile
 # ###################################################################
-
 #Prompt
 function colored_prompt
 {
@@ -871,32 +276,26 @@ function colored_prompt
     PS1="${verm}ROOT@\h:${cinz}\w ${verm}>${norm} "
 }
 colored_prompt
-
 if [ -f /etc/bash_completion ]; then
     source /etc/bash_completion
 fi
-
 alias ls='ls --color=auto -h'
 alias ll='ls --color=auto -lh'
 alias la='ls --color=auto -a'
 alias lf='ls --color=auto -lah'
-
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 EOF
-
 cat <<\EOF > /etc/profile
 # /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
 # and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
-
 if [ "`id -u`" -eq 0 ]; then
   PATH="~/bin:~/.bin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/global/bin"
 else
   PATH="~/bin:~/.bin:/global/bin:/opt/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 fi
 export PATH
-
 if [ "$PS1" ]; then
   if [ "$BASH" ] && [ "$BASH" != "/bin/sh" ]; then
     # The file bash.bashrc already sets the default PS1.
@@ -912,10 +311,8 @@ if [ "$PS1" ]; then
     fi
   fi
 fi
-
 # The default umask is now handled by pam_umask.
 # See pam_umask(8) and /etc/login.defs.
-
 if [ -d /etc/profile.d ]; then
   for i in /etc/profile.d/*.sh; do
     if [ -r $i ]; then
@@ -924,7 +321,6 @@ if [ -d /etc/profile.d ]; then
   done
   unset i
 fi
-
 export TMOUT=3600
 cd
 EOF
@@ -952,44 +348,6 @@ chmod 644 /etc/security/limits.conf
 # Prohibited buttons in menu.
 # using polkit (avoid hibernate, shutdown, reboot, suspension)
 cp $FILES/disable-{hibernate,suspend,reboot,shutdown}.pkla /etc/polkit-1/localauthority/90-mandatory.d/
-
-########################################################################
-# No grub menu for users!
-cat <<\EOF > /etc/default/grub
-# If you change this file, run 'update-grub' afterwards to update
-# /boot/grub/grub.cfg.
-# For full documentation of the options in this file, see:
-#   info -f grub -n 'Simple configuration'
-
-GRUB_DEFAULT=0
-GRUB_HIDDEN_TIMEOUT=0
-GRUB_TIMEOUT=0
-GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
-GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-GRUB_CMDLINE_LINUX=""
-
-# Uncomment to enable BadRAM filtering, modify to suit your needs
-# This works with Linux (no patch required) and with any kernel that obtains
-# the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
-#GRUB_BADRAM="0x01234567,0xfefefefe,0x89abcdef,0xefefefef"
-
-# Uncomment to disable graphical terminal (grub-pc only)
-#GRUB_TERMINAL=console
-
-# The resolution used on graphical terminal
-# note that you can use only modes which your graphic card supports via VBE
-# you can see them in real GRUB with the command `vbeinfo'
-#GRUB_GFXMODE=640x480
-
-# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
-#GRUB_DISABLE_LINUX_UUID=true
-
-# Uncomment to disable generation of recovery mode menu entries
-#GRUB_DISABLE_RECOVERY="true"
-
-# Uncomment to get a beep at grub start
-#GRUB_INIT_TUNE="480 440 1"
-EOF
 
 ########################################################################
 
@@ -1167,17 +525,18 @@ cp $DIR/squeak/* /usr/share/squeak/
 
 echo "a4" > /etc/papersize
 
-update-grub2 &
+#update-grub2
 
-systemctl restart ssh.service &
+systemctl restart ssh.service 
 
 wait $DOWN
-echo "Running NetBeans script, it takes some time..." && bash $DIR/netbeans-8.1-linux.sh --silent
+echo "Running NetBeans script, it takes some time..." 
+bash $DIR/netbeans-8.1-linux.sh --silent
 
 wait $APT
 apt-get install -y libnetbeans-cvsclient-java
 update-java-alternatives -s java-1.7.0-openjdk-amd64
-dpkg -i $DIR/*.deb $FILES/*.deb || echo "" & APT=$!
+dpkg -i $DIR/*.deb $FILES/*.deb || echo ""
 
 # Kill ghosts users (depends on Lightdm)
 cat <<\EOF > /usr/local/bin/ghostkiller.sh
@@ -1291,13 +650,15 @@ chmod 755 /etc/chromium/policies/managed/kerberos.json
 
 # Final update & upgrade.
 wait $APT
-apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y & APT=$!
+apt-get update 
+apt-get upgrade -y 
+apt-get dist-upgrade -y 
 
-systemctl enable irqbalance.service &
+systemctl enable irqbalance.service
 
 # Boot time.
-systemctl enable upower &
-systemctl enable systemd-readahead-collect systemd-readahead-replay &
+systemctl enable upower
+systemctl enable systemd-readahead-collect systemd-readahead-replay
 
 # Responiveness of system.
 cat <<\EOF > /etc/sysctl.d/99-sysctl.conf
@@ -1320,13 +681,14 @@ GOVERNOR="ondemand"
 EOF
 
 # Disable root password.
-sed -i -e 's/root:\([^:]*\):\([^:]*\)/root:*:\2/' /etc/shadow
+#sed -i -e 's/root:\([^:]*\):\([^:]*\)/root:*:\2/' /etc/shadow
 
 # Trash packages and corrections...
 UNINSTALL='network-manager libpam-ldap libpam-krb5 nscd libnss-ldap consolekit modemmanager exim4 exim4-base exim4-config libjim0.75 usb-modeswitch usb-modeswitch-data mate-media-pulse'
 
 # Uninstalling trash!
-wait $APT && apt-get purge -y $UNINSTALL
+wait $APT 
+apt-get purge -y $UNINSTALL
 apt-get install --reinstall libpam-sss
 rm -rf /etc/NetworkManager
 
@@ -1361,9 +723,41 @@ ssh -o StrictHostKeyChecking=no -i $SECRETS/id_rsa puppet "puppet cert sign $COM
 wait
 
 # Should I?
-rm -rf $DIR
-rm -rf /root/{Desktop,.bash_history,.aptitude,.nbi}
+#rm -rf $DIR
+#rm -rf /root/{Desktop,.bash_history,.aptitude,.nbi}
+
+# No grub menu for users!
+cat <<\EOF > /etc/default/grub
+# If you change this file, run 'update-grub' afterwards to update
+# /boot/grub/grub.cfg.
+# For full documentation of the options in this file, see:
+#   info -f grub -n 'Simple configuration'
+GRUB_DEFAULT=0
+GRUB_HIDDEN_TIMEOUT=0
+GRUB_TIMEOUT=0
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+GRUB_CMDLINE_LINUX=""
+# Uncomment to enable BadRAM filtering, modify to suit your needs
+# This works with Linux (no patch required) and with any kernel that obtains
+# the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
+#GRUB_BADRAM="0x01234567,0xfefefefe,0x89abcdef,0xefefefef"
+# Uncomment to disable graphical terminal (grub-pc only)
+#GRUB_TERMINAL=console
+# The resolution used on graphical terminal
+# note that you can use only modes which your graphic card supports via VBE
+# you can see them in real GRUB with the command `vbeinfo'
+#GRUB_GFXMODE=640x480
+# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
+#GRUB_DISABLE_LINUX_UUID=true
+# Uncomment to disable generation of recovery mode menu entries
+#GRUB_DISABLE_RECOVERY="true"
+# Uncomment to get a beep at grub start
+#GRUB_INIT_TUNE="480 440 1"
+EOF
+
+update-grub
 
 # Finally...
 echo "Installation complete"
-shutdown -r now
+#shutdown -r now
